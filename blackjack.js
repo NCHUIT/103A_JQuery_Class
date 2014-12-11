@@ -144,7 +144,7 @@ $(document).ready(function(){
   $("#btn-hit").click(function(){
     //var card = deck.deal_card();
     if(busted){
-      outcome("你已經死了","warning");
+      outcome("你已經死了!!!!","warning");
       return;
     }
     busted = !player.hit(deck);
