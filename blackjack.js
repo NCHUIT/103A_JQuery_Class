@@ -103,3 +103,63 @@ function shuffle(v) {
 }
 
 // ==================================
+
+var deck,player,dealer;
+var busted = false;
+
+function outcome(msg,state){
+  $("#outcome").text(msg).attr("class","alert alert-" + state);
+}
+
+$(document).ready(function(){
+  deck = new Deck();
+  deck.shuffle();
+  player = new Hand();
+  dealer = new Hand(true);
+
+  player.add_card(deck.deal_card());
+  dealer.add_card(deck.deal_card());
+  player.add_card(deck.deal_card());
+  dealer.add_card(deck.deal_card());
+
+  var board = $("#player .blackjack-board");
+  board.empty();
+  var cards = player.cards;
+  for(k in cards)
+    board.append($("<div class='poker poker-"+cards[k].toString()+"'></div>"));
+
+  board = $("#dealer .blackjack-board");
+  board.empty();
+  var cards = dealer.cards;
+  for(k in cards){
+    if(k == 0)
+      board.append(jQuery("<div class='poker poker-back-heartstone'></div>"));
+    else
+      board.append($("<div class='poker poker-"+cards[k].toString()+"'></div>"));
+  }
+
+  $("#player .badge").text(player.get_value());
+  // $("#dealer .badge").text(dealer.get_value());
+
+  $("#btn-hit").click(function(){
+    //var card = deck.deal_card();
+    if(busted){
+      outcome("你已經死了","warning");
+      return;
+    }
+    busted = !player.hit(deck);
+    console.log(card.toString());
+    console.log(player.toString());
+    var cardDOM = $("<div class='poker poker-"+player.cards[player.cards.length - 1].toString()+"'></div>");
+    console.log(cardDOM);
+    $("#player .blackjack-board").append(cardDOM);
+    $("#player .badge").text(player.get_value());
+    if(busted)
+      outcome("洗洗睡吧","danger");
+  });
+});
+
+// jQuery 大致運作模式
+
+// 1.選取DOM
+// 2.針對選到的 DOM 進行操作
