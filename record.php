@@ -6,6 +6,10 @@ else
     $record = array();
 
 if(isset($_GET['name']) && isset($_GET['win'])){
+    if($_GET['name'] != strip_tags($_GET['name'])){
+        http_response_code(405);
+        exit();
+    }
     if(!isset($record[$_GET['name']]))
         $record[$_GET['name']] = 0;
     if($_GET['win'] === 'true')
@@ -13,6 +17,12 @@ if(isset($_GET['name']) && isset($_GET['win'])){
     else
         $record[$_GET['name']]--;
 }
+
+/*
+foreach ($record as $key => $value) {
+        if($key != strip_tags($key))
+                unset($record[$key]);
+}*/
 
 file_put_contents("record.json",json_encode($record));
 
