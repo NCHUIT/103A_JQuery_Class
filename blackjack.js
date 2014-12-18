@@ -166,6 +166,7 @@ function game_set(wins){
 
 $(document).ready(function(){
   player_name = prompt("請問你是...?");
+  player_name = player_name ? player_name : "anonymous";
   init();
   
 
