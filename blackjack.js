@@ -106,12 +106,14 @@ function shuffle(v) {
 
 var deck,player,dealer;
 var busted = false;
+var score = 0;
+var player_name;
 
 function outcome(msg,state){
   $("#outcome").text(msg).attr("class","alert alert-" + state);
 }
 
-$(document).ready(function(){
+function init(){
   deck = new Deck();
   deck.shuffle();
   player = new Hand();
@@ -139,12 +141,44 @@ $(document).ready(function(){
   }
 
   $("#player .badge").text(player.get_value());
-  // $("#dealer .badge").text(dealer.get_value());
+  $("#dealer .badge").text("?");
+
+  busted = false;
+}
+
+function game_set(wins){
+  if(wins)
+    score++;
+  else
+    score--;
+
+  $.ajax("http://jquery.pastleo.me/record.php",{
+    dataType:"json",
+    data:{"name":player_name,"win":wins},
+    success:function(data){
+      console.log(data);
+      $(".table").empty().append($("<tr><td>玩家</td><td>分數</td></tr>"));
+      for(k in data)
+        $(".table").append($("<tr><td>"+k+"</td><td>"+data[k]+"</td></tr>"));
+      if(data[player_name]){
+        score = data[player_name];
+        $("#score").text("你好:"+player_name+"，Score: "+score);
+      }
+    }
+  });
+
+  $("#score").text("Score: "+score);
+}
+
+$(document).ready(function(){
+  player_name = prompt("請問你是...?");
+  init();
+  
 
   $("#btn-hit").click(function(){
     //var card = deck.deal_card();
     if(busted){
-      outcome("你已經死了!!!!","warning");
+      outcome("請按下 deal 進行下一局","warning");
       return;
     }
     busted = !player.hit(deck);
@@ -154,8 +188,59 @@ $(document).ready(function(){
     console.log(cardDOM);
     $("#player .blackjack-board").append(cardDOM);
     $("#player .badge").text(player.get_value());
-    if(busted)
+    if(busted){
       outcome("洗洗睡吧","danger");
+      game_set(false);
+    }
+  });
+
+  jQuery("#btn-stand").click(function(){
+    if(busted){
+      outcome("請按下 deal 進行下一局","warning");
+      return;
+    }
+    dealer.dealer_run(deck,player);
+    if(player.wins(dealer)){
+      outcome("你贏了!","success");
+      game_set(true);
+    }
+    else{
+      outcome("QQ","danger");
+      game_set(false);
+    }
+
+    busted = true;
+
+    var board = $("#dealer .blackjack-board");
+    board.empty();
+    var cards = dealer.cards;
+    for(k in cards){
+      board.append($("<div class='poker poker-"+cards[k].toString()+"'></div>"));
+    }
+    $("#dealer .badge").text(dealer.get_value());
+  });
+
+  jQuery("#btn-deal").click(function(){
+    if(!busted){
+      game_set(false);
+    }
+    console.log(234);
+    init();
+    outcome("你好","info");
+  });
+
+  $.ajax("http://jquery.pastleo.me/record.php",{
+    dataType:"json",
+    success:function(data){
+      console.log(data);
+      $(".table").empty().append($("<tr><td>玩家</td><td>分數</td></tr>"));
+      for(k in data)
+        $(".table").append($("<tr><td>"+k+"</td><td>"+data[k]+"</td></tr>"));
+      if(data[player_name]){
+        score = data[player_name];
+        $("#score").text("你好"+player_name+"， Score: "+score);
+      }
+    }
   });
 });
 
