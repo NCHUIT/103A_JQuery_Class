@@ -160,14 +160,12 @@ function game_set(wins){
       $(".table").empty().append($("<tr><td>玩家</td><td>分數</td></tr>"));
       for(k in data)
         $(".table").append($("<tr><td>"+k+"</td><td>"+data[k]+"</td></tr>"));
-      if(data[player_name]){
+      if(data[player_name] !== undefined){
         score = data[player_name];
         $("#score").text("你好:"+player_name+"，Score: "+score);
       }
     }
   });
-
-  $("#score").text("Score: "+score);
 }
 
 $(document).ready(function(){
@@ -236,7 +234,7 @@ $(document).ready(function(){
       $(".table").empty().append($("<tr><td>玩家</td><td>分數</td></tr>"));
       for(k in data)
         $(".table").append($("<tr><td>"+k+"</td><td>"+data[k]+"</td></tr>"));
-      if(data[player_name]){
+      if(data[player_name] !== undefined){
         score = data[player_name];
         $("#score").text("你好"+player_name+"， Score: "+score);
       }
