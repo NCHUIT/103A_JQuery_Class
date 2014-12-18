@@ -156,16 +156,12 @@ function game_set(wins){
     dataType:"json",
     data:{"name":player_name,"win":wins},
     success:function(data){
-      console.log(data);
       $(".table").empty().append($("<tr><td>玩家</td><td>分數</td></tr>"));
       for(k in data)
         $(".table").append($("<tr><td>"+k+"</td><td>"+data[k]+"</td></tr>"));
-      if(data[player_name] !== undefined){
-        score = data[player_name];
-        $("#score").text("你好:"+player_name+"，Score: "+score);
-      }
     }
   });
+  $("#score").text("你好:"+player_name+"，Score: "+score);
 }
 
 $(document).ready(function(){
@@ -222,7 +218,6 @@ $(document).ready(function(){
     if(!busted){
       game_set(false);
     }
-    console.log(234);
     init();
     outcome("你好","info");
   });
@@ -230,14 +225,12 @@ $(document).ready(function(){
   $.ajax("http://jquery.pastleo.me/record.php",{
     dataType:"json",
     success:function(data){
-      console.log(data);
       $(".table").empty().append($("<tr><td>玩家</td><td>分數</td></tr>"));
       for(k in data)
         $(".table").append($("<tr><td>"+k+"</td><td>"+data[k]+"</td></tr>"));
-      if(data[player_name] !== undefined){
+      if(data[player_name] !== undefined)
         score = data[player_name];
-        $("#score").text("你好"+player_name+"， Score: "+score);
-      }
+      $("#score").text("你好"+player_name+"， Score: "+score);
     }
   });
 });
