@@ -152,7 +152,7 @@ function game_set(wins){
   else
     score--;
 
-  $.ajax("http://jquery.pastleo.me/record.php",{
+  $.ajax("record.php",{
     dataType:"json",
     data:{"name":player_name,"win":wins},
     success:function(data){
@@ -223,7 +223,7 @@ $(document).ready(function(){
     outcome("你好","info");
   });
 
-  $.ajax("http://jquery.pastleo.me/record.php",{
+  $.ajax("record.php",{
     dataType:"json",
     success:function(data){
       $(".table").empty().append($("<tr><td>玩家</td><td>分數</td></tr>"));
